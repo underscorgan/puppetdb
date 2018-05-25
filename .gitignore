@@ -51,3 +51,6 @@ checkouts
 /resources/locales.clj
 /mp-*
 /dev-resources/i18n/bin
+
+# gemfile lock
+Gemfile.lock
