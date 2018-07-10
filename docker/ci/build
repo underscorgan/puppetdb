@@ -37,7 +37,7 @@ bundle install --path "$BUNDLER_PATH"
 : ===
 : === If we do not git pull --unshallow we get really weird results with git describe
 : ===
-git pull --unshallow
+git pull --unshallow ||: === This is not a shallow clone, nothing to see here
 
 : ===
 : === make sure we fetch tags for versioning
@@ -52,7 +52,11 @@ postgres_version="9.6.8"
 : ===
 bundle exec puppet-docker update-base-images ubuntu:16.04 postgres:9.6.8
 
-container_list=(puppetdb puppetdb-postgres)
+if [ "$#" -eq 0 ]; then
+  container_list=(puppetdb puppetdb-postgres)
+else
+  container_list=("$@")
+fi
 
 : ===
 : === build and test all the images before we push anything
@@ -64,8 +68,13 @@ done
 : ===
 : === push all the images
 : ===
-push_image puppetdb "$version"
-push_image puppetdb-postgres "$postgres_version"
+for container in "${container_list[@]}"; do
+  if [[ "$container" == "puppetdb-postgres" ]]; then
+    push_image puppetdb-postgres "$postgres_version"
+  else
+    push_image "$container" "$version"
+  fi
+done
 
 : ===
 : === SUCCESS
