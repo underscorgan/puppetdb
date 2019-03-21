@@ -12,7 +12,7 @@ RUN lein with-profile uberjar uberjar
 
 
 FROM openjdk:8-jre-alpine
-RUN apk add --no-cache tini curl openssl
+RUN apk add --no-cache tini curl openssl su-exec
 COPY --from=builder /app/target/puppetdb.jar /
 
 ARG vcs_ref
@@ -34,6 +34,8 @@ ENV PUPPETDB_JAVA_ARGS="-Djava.net.preferIPv4Stack=true -Xms256m -Xmx256m"
 # used by entrypoint to determine if puppetserver should be contacted for config
 # set to false when container tests are run
 ENV USE_PUPPETSERVER=true
+ENV CONSUL_VERSION="1.4.3"
+ENV CONSUL_HOSTNAME="consul"
 
 LABEL org.label-schema.maintainer="Puppet Release Team <release@puppet.com>" \
       org.label-schema.vendor="Puppet" \
@@ -70,11 +72,17 @@ RUN chmod +x /ssl.sh
 COPY docker/puppetdb/ssl-setup.sh /
 RUN chmod +x /ssl-setup.sh
 
+RUN wget https://releases.hashicorp.com/consul/"$CONSUL_VERSION"/consul_"$CONSUL_VERSION"_linux_amd64.zip && \
+    unzip -d /usr/local/bin consul_"$CONSUL_VERSION"_linux_amd64.zip && \
+    rm consul_"$CONSUL_VERSION"_linux_amd64.zip
+
 VOLUME /etc/puppetlabs/puppet/ssl/
 
 COPY docker/puppetdb/docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 COPY docker/puppetdb/docker-entrypoint.d /docker-entrypoint.d
+
+COPY docker/puppetdb/consul.d /etc/consul.d
 
 EXPOSE 8080 8081
 

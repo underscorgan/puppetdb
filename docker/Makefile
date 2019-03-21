@@ -50,9 +50,9 @@ test: prep
 		bundle exec rspec puppetdb/spec
 
 publish: prep
-	@docker push puppet/puppetdb:$(version)
+	@docker push $(NAMESPACE)/puppetdb:$(version)
 ifeq ($(IS_LATEST),true)
-	@docker push puppet/puppetdb:latest
+	@docker push $(NAMESPACE)/puppetdb:latest
 endif
 
 .PHONY: lint build test publish

@@ -1,0 +1,13 @@
+{
+  "service": {
+    "name": "puppetdb",
+    "id": "puppetdb",
+    "port": 8080,
+    "checks": [
+      {
+        "http": "http://127.0.0.1:8080/status/v1/services/puppetdb-status",
+        "interval": "30s"
+      }
+    ]
+  }
+}
