@@ -53,6 +53,7 @@ RUN wget http://nightlies.puppet.com/apt/puppet6-nightly-release-"$UBUNTU_CODENA
 COPY docker/puppetdb/logback.xml /etc/puppetlabs/puppetdb/logback.xml
 COPY docker/puppetdb/request-logging.xml /etc/puppetlabs/puppetdb/request-logging.xml
 COPY docker/puppetdb/conf.d /etc/puppetlabs/puppetdb/conf.d/
+COPY resources/puppetlabs/puppetdb/bootstrap.cfg /etc/puppetlabs/puppetdb/bootstrap.cfg
 RUN mkdir -p /opt/puppetlabs/server/data/puppetdb/logs
 
 # We want to use the HOCON database.conf and config.conf files, so get rid
