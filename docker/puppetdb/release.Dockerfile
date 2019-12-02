@@ -12,7 +12,7 @@ LABEL org.label-schema.maintainer="Puppet Release Team <release@puppet.com>" \
       org.label-schema.vcs-ref="$vcs_ref" \
       org.label-schema.build-date="$build_date" \
       org.label-schema.schema-version="1.0" \
-      org.label-schema.dockerfile="/Dockerfile-release"
+      org.label-schema.dockerfile="/release.Dockerfile"
 
 RUN wget https://apt.puppetlabs.com/puppet6-release-"$UBUNTU_CODENAME".deb && \
     dpkg -i puppet6-release-"$UBUNTU_CODENAME".deb && \
@@ -32,4 +32,4 @@ RUN mkdir -p /opt/puppetlabs/server/data/puppetdb/logs
 RUN rm -f /etc/puppetlabs/puppetdb/conf.d/database.ini && \
     rm -f /etc/puppetlabs/puppetdb/conf.d/config.ini
 
-COPY Dockerfile-release /
+COPY release.Dockerfile /
