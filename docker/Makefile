@@ -73,9 +73,9 @@ test: prep
 		bundle exec --gemfile $$GEMFILE rspec spec
 
 push-image: prep
-	@docker push puppet/puppetdb:$(VERSION)
+	@docker push $(NAMESPACE)/puppetdb:$(VERSION)
 ifeq ($(IS_LATEST),true)
-	@docker push puppet/puppetdb:$(LATEST_VERSION)
+	@docker push $(NAMESPACE)/puppetdb:$(LATEST_VERSION)
 endif
 
 push-readme:
@@ -84,7 +84,7 @@ push-readme:
 		-v $(PWD)/README.md:/data/README.md \
 		-e DOCKERHUB_USERNAME="$(DOCKERHUB_USERNAME)" \
 		-e DOCKERHUB_PASSWORD="$(DOCKERHUB_PASSWORD)" \
-		-e DOCKERHUB_REPO_PREFIX=puppet \
+		-e DOCKERHUB_REPO_PREFIX=$(NAMESPACE) \
 		-e DOCKERHUB_REPO_NAME=puppetdb \
 		sheogorath/readme-to-dockerhub
 
